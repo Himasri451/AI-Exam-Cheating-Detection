@@ -1,12 +1,25 @@
-def run_inference():
-    print("Running AI detection...")
+from ultralytics import YOLO
+import cv2
 
-    # Step 1: Load model (later we add YOLO here)
-    
-    # Step 2: Capture video / input
-    
-    # Step 3: Detect objects (students, phone)
-    
-    # Step 4: Apply cheating logic
-    
-    print("Detection complete")
+def run_inference():
+    print("Starting YOLO detection...")
+
+    model = YOLO("yolov8n.pt")
+
+    cap = cv2.VideoCapture(0)
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        results = model(frame)
+
+        annotated_frame = results[0].plot()
+        cv2.imshow("Detection", annotated_frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
